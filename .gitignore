@@ -1,0 +1,28 @@
+# === General ===
+.DS_Store
+.env
+.env.local
+*.swp
+*.bak
+*.log
+
+# === Rails ===
+/survey_api/log/*
+!/survey_api/log/.keep
+/survey_api/tmp
+/survey_api/.bundle
+/survey_api/.env
+/survey_api/db/*.sqlite3
+/survey_api/db/*.sqlite3-journal
+/survey_api/public/assets
+/survey_api/node_modules
+/survey_api/coverage
+/survey_api/storage
+
+# === React / Node ===
+/frontend/node_modules
+/frontend/.next
+/frontend/dist
+/frontend/build
+/frontend/.env
+/frontend/.env.*.local
