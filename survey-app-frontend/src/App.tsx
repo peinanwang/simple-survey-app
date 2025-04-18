@@ -4,6 +4,7 @@ import { useAuth } from './context/AuthContext';
 import { Routes, Route } from 'react-router-dom';
 import SurveyList from './components/SurveyList';
 import SurveyDetail from './components/SurveyDetail';
+import SurveyForm from './components/SurveyForm';
 
 function App() {
   const { user, login, signup, logout } = useAuth();
@@ -12,18 +13,21 @@ function App() {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [selectedSurvey, setSelectedSurvey] = useState<any>(null);
 
   const handleSubmit = async () => {
     try {
       if (isSignup) {
-        if (password !== confirmPassword) return alert("Passwords do not match");
+        if (password !== confirmPassword) {
+          alert("Passwords do not match");
+          return;
+        }
         await signup(name, email, password, confirmPassword);
+        setIsSignup(false); // switch to login view after successful signup
       } else {
         await login(email, password);
       }
-    } catch (e) {
-      alert("Auth failed");
+    } catch (e: any) {
+      alert("Failed to login/signup: " + (e?.message || e.toString()));
     }
   };
 
@@ -57,6 +61,8 @@ function App() {
           </VStack>
           <Routes>
             <Route path="/" element={<SurveyList />} />
+            <Route path="/surveys/new" element={<SurveyForm />} />
+            <Route path="/surveys/:id/edit" element={<SurveyForm />} />
             <Route path="/surveys/:id" element={<SurveyDetail />} />
           </Routes>
         </Box>
