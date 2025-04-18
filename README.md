@@ -40,9 +40,9 @@ This is a full-stack web app for creating, managing, assigning, and responding t
 
 ---
 
-## 👤 User Guide
+## User Guide
 
-### 🧑 Regular User
+### Regular User
 
 #### Login
 
@@ -57,11 +57,11 @@ This is a full-stack web app for creating, managing, assigning, and responding t
 - Complete and submit uncompleted surveys
 - View previously completed surveys
 - Use search bar to filter your assigned surveys by title
-- ⚠️ _Known Issue: Completed survey answers may not display correctly due to mapping inconsistencies_
+- Known Issue: Completed survey answers may not display correctly due to mapping inconsistencies_
 
 ---
 
-### 🛠️ Admin / Manager
+### Admin / Manager
 
 #### Login
 
