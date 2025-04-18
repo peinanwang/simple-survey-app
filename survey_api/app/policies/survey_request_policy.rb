@@ -25,7 +25,7 @@ class SurveyRequestPolicy < ApplicationPolicy
   def assign_user?
     # Admin: can assign any survey request to any user
     # Manager: can assign survey requests that are created by Admin.
-    #
+
     if user.admin_role?
       return true
     elsif user.manager_role?
@@ -38,7 +38,7 @@ class SurveyRequestPolicy < ApplicationPolicy
 
   def answer?
     # Only the assigned users can submit their answers
-    record.assigned_to_id == user.id
+    record.assigned_to_id == user.id && record.status == "assigned"
   end
 
   class Scope < ApplicationPolicy::Scope

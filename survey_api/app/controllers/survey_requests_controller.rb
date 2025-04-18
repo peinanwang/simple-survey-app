@@ -66,13 +66,18 @@ class SurveyRequestsController < ApplicationController
   def answer
     authorize @survey_request, :answer?
 
-    if @survey_request.assigned_to_id != current_user.id
-      return render json: { error: "Unauthorized to answer this survey" }, status: :forbidden
+    answers = params.require(:answers).permit!
+
+    # Validate that all question labels have a matching answer
+    expected_labels = @survey_request.questions.map { |q| q["label"].to_s.strip }
+    provided_labels = answers.keys.map(&:to_s).map(&:strip)
+
+    answer_matched = expected_labels.sort == provided_labels.sort
+
+    if !answer_matched
+      return render json: { error: "Answers and the survey questions do not match" }, status: :unprocessable_entity
     end
 
-    # ASSUMPTION: trust the users to send full set of the answers.
-    # i.e., the response is sent from the frontend UI, not from any other source.
-    answers = params.require(:answers).permit!
     @survey_request.answers = answers
     @survey_request.status = "completed"
 
@@ -81,6 +86,21 @@ class SurveyRequestsController < ApplicationController
     else
       render json: @survey_request.errors, status: :unprocessable_entity
     end
+  end
+
+  def search
+    permitted_keys = if current_user.admin_role? || current_user.manager_role?
+      [ :title_cont, :creator_id_eq ]
+    else
+      [ :title_cont ]
+    end
+
+    permitted_params = params[:q]&.slice(*permitted_keys) || {}
+
+    base_scope = current_user.admin_role? || current_user.manager_role? ? SurveyRequest.all : SurveyRequest.where(assigned_to_id: current_user.id)
+    @q = base_scope.ransack(permitted_params)
+
+    render json: @q.result
   end
 
   private
