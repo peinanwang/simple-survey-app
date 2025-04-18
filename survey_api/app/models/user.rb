@@ -10,11 +10,14 @@ class User < ApplicationRecord
   validates :name, presence: true
   validates :role, presence: true, inclusion: { in: ROLES }
 
-  def admin?
+  has_many :created_surveys, class_name: "SurveyRequest", foreign_key: :creator_id
+  has_many :assigned_surveys, class_name: "SurveyRequest", foreign_key: :assigned_to_id
+
+  def admin_role?
     role == 'admin'
   end
 
-  def manager?
+  def manager_role?
     role == 'manager'
   end
 end
